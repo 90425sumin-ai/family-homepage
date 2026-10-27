@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>우리 가족 홈</title>
+<meta name="description" content="가족 모두의 일정을 한 달력에서. 병원 예약, 학원, 생일, 장보기까지 함께 보고 함께 챙기는 가족 일정 공유 앱.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap">
+<style>
+:root {
+  --paper: #F4F6F5;
+  --surface: #FFFFFF;
+  --ink: #1D272B;
+  --muted: #5B686D;
+  --line: #D9E0DF;
+  --accent: #1D6B61;
+  --accent-soft: #E3EFEC;
+  --accent-ink: #FFFFFF;
+  --sun: #C23B2A;
+  --sat: #2A58B5;
+  --m0: #C8711F; --m1: #2F78BD; --m2: #3E8C4E; --m3: #9550B0; --m4: #BE4462;
+  --display: "Gowun Batang", "Nanum Myeongjo", serif;
+  --body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121819; --surface: #1A2224; --ink: #E4EBEA; --muted: #98A6A9; --line: #2B3739;
+    --accent: #5BC0AE; --accent-soft: #1C2F2C; --accent-ink: #0E1A18; --sun: #F07966; --sat: #7EA6F2;
+    --m0: #EE9A4C; --m1: #6AAAE8; --m2: #6CC07E; --m3: #C48AE0; --m4: #EC7D98;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #121819; --surface: #1A2224; --ink: #E4EBEA; --muted: #98A6A9; --line: #2B3739;
+  --accent: #5BC0AE; --accent-soft: #1C2F2C; --accent-ink: #0E1A18; --sun: #F07966; --sat: #7EA6F2;
+  --m0: #EE9A4C; --m1: #6AAAE8; --m2: #6CC07E; --m3: #C48AE0; --m4: #EC7D98;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.65; word-break: keep-all; }
+a { color: inherit; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 700; line-height: 1.3; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+
+/* header */
+header { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--paper) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.nav { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+.logo { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 19px; text-decoration: none; }
+.logo svg { width: 28px; height: 28px; }
+.nav-links { display: flex; gap: 24px; align-items: center; font-size: 15px; }
+.nav-links a { text-decoration: none; color: var(--muted); }
+.nav-links a:hover { color: var(--ink); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 22px; border-radius: 10px; background: var(--accent); color: var(--accent-ink) !important; text-decoration: none; font-weight: 600; font-size: 15px; border: 0; cursor: pointer; }
+.btn:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; color: var(--ink) !important; border: 1px solid var(--line); }
+.btn.small { padding: 8px 16px; font-size: 14px; }
+
+/* hero */
+.hero { padding: 72px 0 56px; display: grid; grid-template-columns: 1.05fr 1fr; gap: 56px; align-items: center; }
+.eyebrow { display: inline-block; font-size: 13px; font-weight: 600; color: var(--accent); background: var(--accent-soft); padding: 4px 12px; border-radius: 99px; margin-bottom: 20px; }
+.hero h1 { font-size: clamp(34px, 5.2vw, 54px); letter-spacing: -0.01em; }
+.hero h1 em { font-style: normal; color: var(--accent); }
+.hero .lead { margin-top: 20px; font-size: 18px; color: var(--muted); max-width: 30em; }
+.hero .ctas { margin-top: 32px; display: flex; gap: 12px; flex-wrap: wrap; }
+.members { margin-top: 36px; display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--muted); }
+.avatars { display: flex; }
+.avatars span { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-size: 13px; font-weight: 600; border: 2px solid var(--paper); margin-left: -8px; }
+.avatars span:first-child { margin-left: 0; }
+
+/* calendar mock */
+.mock { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 22px; box-shadow: 0 24px 48px -24px rgba(20, 40, 38, 0.28); }
+.mock-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+.mock-head h3 { font-size: 20px; }
+.mock-head small { color: var(--muted); font-size: 13px; }
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; font-size: 12px; }
+.cal .dow { text-align: center; color: var(--muted); font-weight: 600; padding-bottom: 4px; }
+.cal .dow:first-child, .cal .d.sun > b { color: var(--sun); }
+.cal .dow:last-child, .cal .d.sat > b { color: var(--sat); }
+.cal .d { min-height: 54px; border-radius: 8px; padding: 4px; background: var(--paper); display: flex; flex-direction: column; gap: 2px; }
+.cal .d.out { opacity: 0.35; }
+.cal .d.today { outline: 2px solid var(--accent); outline-offset: -2px; }
+.cal .d > b { font-weight: 600; font-size: 12px; }
+.ev { display: block; font-size: 10.5px; line-height: 1.35; color: #fff; border-radius: 4px; padding: 1px 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 14px; font-size: 13px; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: 0; }
+
+/* sections */
+section { padding: 80px 0; }
+.sec-head { max-width: 640px; margin-bottom: 44px; }
+.sec-head h2 { font-size: clamp(28px, 3.6vw, 38px); }
+.sec-head p { margin-top: 14px; color: var(--muted); font-size: 17px; }
+.features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 28px; }
+.card .ico { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); margin-bottom: 18px; }
+.card .ico svg { width: 22px; height: 22px; }
+.card h3 { font-size: 20px; margin-bottom: 8px; }
+.card p { color: var(--muted); font-size: 15px; }
+
+.alt { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; counter-reset: step; }
+.step { position: relative; padding-top: 56px; }
+.step::before { counter-increment: step; content: counter(step); position: absolute; top: 0; left: 0; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 18px; }
+.step h3 { font-size: 20px; margin-bottom: 8px; }
+.step p { color: var(--muted); font-size: 15px; }
+
+.quotes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.quote { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 28px; }
+.quote p { font-family: var(--display); font-size: 19px; line-height: 1.6; }
+.quote footer { margin-top: 16px; color: var(--muted); font-size: 14px; }
+
+.faq details { border-bottom: 1px solid var(--line); padding: 18px 0; }
+.faq summary { cursor: pointer; font-weight: 600; font-size: 17px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+.faq summary::after { content: "+"; color: var(--accent); font-size: 22px; line-height: 1; }
+.faq details[open] summary::after { content: "−"; }
+.faq details p { margin-top: 10px; color: var(--muted); }
+
+.cta { text-align: center; background: var(--accent); color: var(--accent-ink); border-radius: 24px; padding: 64px 24px; }
+.cta h2 { font-size: clamp(28px, 4vw, 40px); }
+.cta p { margin-top: 12px; opacity: 0.85; font-size: 17px; }
+.cta .btn { margin-top: 28px; background: var(--accent-ink); color: var(--accent) !important; }
+
+.site-foot { padding: 40px 0 56px; color: var(--muted); font-size: 14px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; padding-top: 48px; gap: 40px; }
+  .features, .steps, .quotes { grid-template-columns: 1fr; }
+  .nav-links a:not(.btn) { display: none; }
+  section { padding: 60px 0; }
+}
+@media (max-width: 420px) {
+  .wrap { padding: 0 16px; }
+  .mock { padding: 14px; }
+  .cal .d { min-height: 44px; }
+  .ev { font-size: 9.5px; padding: 0 3px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="logo" href="#">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="6" width="26" height="23" rx="5" fill="var(--accent)"/><rect x="3" y="6" width="26" height="7" rx="3" fill="var(--accent)" opacity=".6"/><path d="M16 25s-6-3.6-6-7.4A3.2 3.2 0 0 1 16 16a3.2 3.2 0 0 1 6 1.6C22 21.4 16 25 16 25z" fill="var(--accent-ink)"/><rect x="9" y="3" width="3" height="6" rx="1.5" fill="var(--ink)"/><rect x="20" y="3" width="3" height="6" rx="1.5" fill="var(--ink)"/></svg>
+      우리 가족 홈
+    </a>
+    <nav class="nav-links">
+      <a href="#features">기능</a>
+      <a href="#how">시작하기</a>
+      <a href="#faq">자주 묻는 질문</a>
+      <a class="btn small" href="#start">무료로 시작</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <span class="eyebrow">가족 일정 공유 앱</span>
+      <h1>엄마 일정, 아빠 출장, 아이 학원까지<br><em>한 달력</em>에서 함께.</h1>
+      <p class="lead">"그날 누가 데리러 가?" 단톡방에서 묻지 않아도 돼요. 가족 모두가 같은 달력을 보고, 바뀐 일정은 바로 알림으로 받아요.</p>
+      <div class="ctas">
+        <a class="btn" href="#start">가족 달력 만들기</a>
+        <a class="btn ghost" href="#features">어떤 기능이 있나요?</a>
+      </div>
+      <div class="members">
+        <div class="avatars">
+          <span style="background:var(--m0)">엄</span>
+          <span style="background:var(--m1)">아</span>
+          <span style="background:var(--m2)">지</span>
+          <span style="background:var(--m3)">민</span>
+          <span style="background:var(--m4)">할</span>
+        </div>
+        가족마다 고유한 색으로 한눈에 구분
+      </div>
+    </div>
+
+    <div class="mock" aria-label="가족 달력 예시">
+      <div class="mock-head"><h3>11월</h3><small>2026 · 우리 가족</small></div>
+      <div class="cal" id="cal"></div>
+      <div class="legend">
+        <span><i style="background:var(--m0)"></i>엄마</span>
+        <span><i style="background:var(--m1)"></i>아빠</span>
+        <span><i style="background:var(--m2)"></i>지우</span>
+        <span><i style="background:var(--m3)"></i>민준</span>
+        <span><i style="background:var(--m4)"></i>할머니</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>가족에게 필요한 것만, 딱 알맞게</h2>
+        <p>복잡한 업무용 캘린더 대신, 집안일과 가족 일정에 맞춰 만들었어요.</p>
+      </div>
+      <div class="features">
+        <div class="card">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+          <h3>함께 쓰는 달력</h3>
+          <p>누구든 일정을 추가하면 모든 가족의 화면에 바로 나타나요. 주말과 공휴일은 빨간색으로.</p>
+        </div>
+        <div class="card">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="8" cy="9" r="3"/><circle cx="16" cy="9" r="3"/><path d="M3 19c.8-3 2.8-4.5 5-4.5s4.2 1.5 5 4.5M13 15.2c.9-.5 1.9-.7 3-.7 2.2 0 4.2 1.5 5 4.5"/></svg></div>
+          <h3>가족별 색깔</h3>
+          <p>엄마는 주황, 아이는 초록. 색만 봐도 누구 일정인지 알 수 있고, 한 사람만 골라 볼 수도 있어요.</p>
+        </div>
+        <div class="card">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8M10 20a2 2 0 0 0 4 0"/></svg></div>
+          <h3>미리 알림</h3>
+          <p>병원 예약 하루 전, 학원 30분 전. 깜빡하기 쉬운 일정을 알맞은 때에 알려 드려요.</p>
+        </div>
+        <div class="card">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 6h11M9 12h11M9 18h11M4 6l1 1 2-2M4 12l1 1 2-2M4 18h2"/></svg></div>
+          <h3>장보기 · 할 일</h3>
+          <p>"우유 사 오기"를 적어 두면 마트에 들른 사람이 체크. 누가 했는지도 남아요.</p>
+        </div>
+        <div class="card">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v3M12 18v3M4.6 7.5l2.6 1.5M16.8 15l2.6 1.5M4.6 16.5 7.2 15M16.8 9l2.6-1.5"/><circle cx="12" cy="12" r="3"/></svg></div>
+          <h3>반복 일정</h3>
+          <p>매주 화·목 피아노, 매달 25일 관리비. 한 번만 등록하면 알아서 이어져요.</p>
+        </div>
+        <div class="card">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 21s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 11c0 5.6-7 10-7 10z"/></svg></div>
+          <h3>기념일 챙기기</h3>
+          <p>생일, 결혼기념일, 제사까지 음력도 지원해요. 해마다 잊지 않도록 미리 알려 드려요.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="alt">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>3분이면 가족 모두 준비 끝</h2>
+        <p>회원 가입 없이 초대 링크 하나로 시작할 수 있어요.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <h3>가족 달력 만들기</h3>
+          <p>가족 이름을 정하고, 구성원마다 색을 골라요.</p>
+        </div>
+        <div class="step">
+          <h3>초대 링크 보내기</h3>
+          <p>카카오톡이나 문자로 링크를 보내면, 누르기만 해도 참여돼요.</p>
+        </div>
+        <div class="step">
+          <h3>일정 함께 채우기</h3>
+          <p>각자 일정을 넣으면 모두의 달력에 바로 반영돼요.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>먼저 써 본 가족들의 이야기</h2>
+      </div>
+      <div class="quotes">
+        <div class="quote">
+          <p>"아이 둘 학원 픽업 때문에 매일 아침 전화하던 게 없어졌어요. 달력만 보면 오늘 누가 가는지 바로 보여요."</p>
+          <footer>초등학생 두 아이를 키우는 맞벌이 가족</footer>
+        </div>
+        <div class="quote">
+          <p>"멀리 사시는 부모님 병원 일정을 형제들이 같이 보니까, 누가 모시고 갈지 정하기가 훨씬 쉬워졌어요."</p>
+          <footer>삼 남매가 함께 쓰는 가족</footer>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="alt">
+    <div class="wrap faq">
+      <div class="sec-head"><h2>자주 묻는 질문</h2></div>
+      <details open>
+        <summary>요금이 있나요?</summary>
+        <p>가족 달력, 알림, 장보기 목록 모두 무료로 쓸 수 있어요.</p>
+      </details>
+      <details>
+        <summary>스마트폰이 없는 가족도 볼 수 있나요?</summary>
+        <p>웹 브라우저에서 바로 열리기 때문에 컴퓨터나 태블릿으로도 같은 달력을 볼 수 있어요.</p>
+      </details>
+      <details>
+        <summary>개인 일정을 숨길 수 있나요?</summary>
+        <p>일정마다 "나만 보기"를 켜면 다른 가족에게는 "바쁨"으로만 표시돼요.</p>
+      </details>
+      <details>
+        <summary>가족은 몇 명까지 초대할 수 있나요?</summary>
+        <p>한 가족 달력에 최대 12명까지 함께할 수 있어요. 조부모님, 친척도 초대해 보세요.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="start">
+    <div class="wrap">
+      <div class="cta">
+        <h2>오늘부터 가족 일정, 같이 챙겨요</h2>
+        <p>초대 링크 하나로 온 가족이 같은 달력을 봐요.</p>
+        <a class="btn" href="#">가족 달력 만들기</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="wrap site-foot">
+  <span>© 2026 우리 가족 홈</span>
+  <span>가족의 하루를 함께 챙기는 일정 공유 앱</span>
+</div>
+
+<script>
+// Sample November 2026 calendar for the hero mock. Nov 1, 2026 is a Sunday.
+(function () {
+  var cal = document.getElementById('cal');
+  var dows = ['일', '월', '화', '수', '목', '금', '토'];
+  var events = {
+    3: [['m2', '피아노']],
+    5: [['m0', '치과 예약'], ['m2', '피아노']],
+    9: [['m1', '부산 출장']],
+    10: [['m1', '부산 출장']],
+    12: [['m3', '수학학원'], ['m2', '피아노']],
+    14: [['m4', '할머니 생신']],
+    17: [['m0', '학부모 상담']],
+    19: [['m2', '피아노'], ['m3', '수학학원']],
+    21: [['m1', '캠핑']],
+    22: [['m1', '캠핑']],
+    25: [['m0', '관리비']],
+    28: [['m3', '축구 대회']]
+  };
+  var html = dows.map(function (d) { return '<div class="dow">' + d + '</div>'; }).join('');
+  for (var i = 0; i < 35; i++) {
+    var day = i + 1, out = day > 30, dow = i % 7;
+    var cls = 'd' + (dow === 0 ? ' sun' : '') + (dow === 6 ? ' sat' : '') + (out ? ' out' : '') + (day === 12 ? ' today' : '');
+    var evs = (events[day] || []).map(function (e) {
+      return '<span class="ev" style="background:var(--' + e[0] + ')">' + e[1] + '</span>';
+    }).join('');
+    html += '<div class="' + cls + '"><b>' + (out ? day - 30 : day) + '</b>' + evs + '</div>';
+  }
+  cal.innerHTML = html;
+})();
+</script>
+</body>
+</html>
